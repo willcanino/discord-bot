@@ -1,1 +1,2 @@
 discord.py
+SQLAlchemy==1.4.0b1
