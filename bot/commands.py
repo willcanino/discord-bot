@@ -45,6 +45,9 @@ class Commands(commands.Cog):
 			await ctx.send((f"{ctx.author.mention} You do not have the required permissions to use the "
 							"`{ctx.prefix}givexp` command. "
 							"You must have a role that has the 'admin' permission."))
+		elif isinstance(error, commands.NoPrivateMessage):
+			await ctx.send(f"The `{ctx.prefix}givexp` command is unavailable in DMs. "
+							"Please try using it in a server.")
 		else:
 			await ctx.send(f"{ctx.author.mention} Congrats, you managed to break the "
 						   f"`{ctx.prefix}givexp` command!")
