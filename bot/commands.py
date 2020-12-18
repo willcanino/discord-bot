@@ -23,9 +23,7 @@ class Commands(commands.Cog):
 			return await super().do_conversion(ctx, converter, argument, param)
 
 	@commands.command(cls=ConvertIntCommand)
-	# TODO: Add limitations on who can use
-	# this command as we wouldn't want people
-	# adding XP to themselves
+	@commands.has_guild_permissions(administrator=True)
 	async def givexp(self, ctx, amount: int, receiver=commands.UserConverter()):
 		if not isinstance(receiver, discord.User):
 			receiver = ctx.author
