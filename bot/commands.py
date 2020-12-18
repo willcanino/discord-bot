@@ -9,12 +9,24 @@ class Commands(commands.Cog):
 		self.bot = bot
 		self.session = AsyncSession(bind=self.engine)
 
+	@commands.Cog.listener()
+	async def on_message(self, message):
+		if not message.author.bot:
+			user = await self.session.run_sync(UserXP.get_or_create, message.author.id)
+			user.xp += 1
+			await self.session.commit()
+
 	@commands.command()
 	async def xp(self, ctx, *message):
-		def get_user(session):
-			return session.query(UserXP).filter(UserXP.discord_id == ctx.author.id).one()
-		user = await self.session.run_sync(get_user)
-		await ctx.send(f"{ctx.author.mention} You currently have {user.xp} XP!")
+		user = await self.session.run_sync(UserXP.get_or_create, ctx.author.id)
+		# Need the plus 1 because on_message runs after
+		# any command called
+		await ctx.send(f"{ctx.author.mention} You currently have {user.xp + 1} XP!")
+		# NOTE: User is added to database in on_message!
+		# The user in the situation is not added
+		# to the database until session.commit()
+		# is called. This occurs in the on_message
+		# method; something to keep in mind.
 
 	class ConvertIntCommand(commands.Command):
 		async def do_conversion(self, ctx, converter, argument, param):

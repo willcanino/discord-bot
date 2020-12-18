@@ -14,11 +14,3 @@ class bot(commands.Bot):
 	async def on_connect(self):
 		async with self.engine.begin() as conn:
 			await conn.run_sync(base.metadata.create_all)
-
-	async def on_message(self, message):
-		if not message.author.bot:
-			user = await self.session.run_sync(UserXP.get_or_create, message.author.id)
-			user.xp += 1
-			await self.session.commit()
-
-		await self.process_commands(message)
