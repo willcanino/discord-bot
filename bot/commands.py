@@ -23,7 +23,7 @@ class Commands(commands.Cog):
 		# any command called
 		await ctx.send(f"{ctx.author.mention} You currently have {user.xp + 1} XP!")
 		# NOTE: User is added to database in on_message!
-		# The user in the situation is not added
+		# The user in this situation is not added
 		# to the database until session.commit()
 		# is called. This occurs in the on_message
 		# method; something to keep in mind.
