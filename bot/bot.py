@@ -17,14 +17,8 @@ class bot(commands.Bot):
 
 	async def on_message(self, message):
 		if not message.author.bot:
-			def add_user(session):
-				user = session.query(UserXP).filter(UserXP.discord_id == message.author.id) \
-					   .one_or_none()
-				if user is None:
-					user = UserXP(discord_id=message.author.id, xp=0)
-					session.add(user)
-				user.xp += 1
-			await self.session.run_sync(add_user)
+			user = await self.session.run_sync(UserXP.get_or_create, message.author.id)
+			user.xp += 1
 			await self.session.commit()
 
 		await self.process_commands(message)
