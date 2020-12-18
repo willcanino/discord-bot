@@ -7,4 +7,4 @@ class UserXP(Base):
 	__tablename__ = 'userxp'
 
 	discord_id = Column(Integer, primary_key=True)
-	xp = Column(Integer)
+	xp = Column(Integer, nullable=False)
