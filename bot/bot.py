@@ -24,3 +24,5 @@ class bot(commands.Bot):
 				user.xp += 1
 			await self.session.run_sync(add_user)
 			await self.session.commit()
+
+		await self.process_commands(message)
