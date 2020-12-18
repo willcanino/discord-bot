@@ -30,7 +30,7 @@ class Commands(commands.Cog):
 		user = await self.session.run_sync(UserXP.get_or_create, receiver.id)
 		user.xp += amount
 		await self.session.commit()
-		await ctx.send(f"{ctx.author.mention} You have succesfully added {amount:,} XP "
+		await ctx.send(f"{ctx.author.mention} You have succesfully given {amount:,} XP "
 					   f"to {'yourself' if receiver == ctx.author else receiver.mention}!")
 
 	@givexp.error
