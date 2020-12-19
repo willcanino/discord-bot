@@ -21,7 +21,7 @@ class Commands(commands.Cog):
 		user = await self.session.run_sync(UserXP.get_or_create, ctx.author.id)
 		# Need the plus 1 because on_message runs after
 		# any command called
-		await ctx.send(f"{ctx.author.mention} You currently have {user.xp + 1} XP!")
+		await ctx.send(f"{ctx.author.mention} You currently have {user.xp + 1:,} XP!")
 		# NOTE: User is added to database in on_message!
 		# The user in this situation is not added
 		# to the database until session.commit()
