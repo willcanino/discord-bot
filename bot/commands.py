@@ -55,7 +55,7 @@ class Commands(commands.Cog):
 			await ctx.send(f"{ctx.author.mention} `{ctx.message.content.split()[1]}` is not a valid amount of XP.")
 		elif isinstance(error, commands.MissingPermissions):
 			await ctx.send((f"{ctx.author.mention} You do not have the required permissions to use the "
-							"`{ctx.prefix}givexp` command. "
+							f"`{ctx.prefix}givexp` command. "
 							"You must have a role that has the 'admin' permission."))
 		elif isinstance(error, commands.NoPrivateMessage):
 			await ctx.send(f"The `{ctx.prefix}givexp` command is unavailable in DMs. "
