@@ -11,12 +11,14 @@ class UserXP(Base):
 	xp = Column(Integer, default=0, nullable=False)
 
 	@classmethod
-	def get_or_create(cls, session, discord_id, guild_id):
+	def get_or_create(cls, session, discord_id, guild_id, commit=False):
 		user = session.get(cls, (discord_id, guild_id))
+		need_to_commit = False
 		if user is None:
 			user = cls(discord_id=discord_id, guild_id=guild_id)
 			session.add(user)
-		return user
+			need_to_commit = True
+		return (user, need_to_commit) if commit else user
 
 	def __repr__(self):
 		return f'<UserXP(discord_id={self.discord_id}, guild_id={self.guild_id}, xp={self.xp})>'
