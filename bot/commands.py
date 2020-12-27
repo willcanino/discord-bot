@@ -36,6 +36,14 @@ class Commands(commands.Cog):
         # is called. This occurs in the on_message
         # method; something to keep in mind.
 
+    @xp.error
+    async def handle_xp_error(self, ctx, error):
+        if isinstance(error, commands.NoPrivateMessage):
+            await ctx.send('This command is not available in DMs. Try using it in a server with me')
+        else:
+            print(f'XP Command error: {repr(error)}')
+            await ctx.send(f"Congrats, you managed to break the `{ctx.prefix}xp` command!")
+
     class ConvertIntCommand(commands.Command):
         async def do_conversion(self, ctx, converter, argument, param):
             if isinstance(argument, str):
