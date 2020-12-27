@@ -70,7 +70,7 @@ class Commands(commands.Cog):
         else:
             await ctx.send(f"{ctx.author.mention} Congrats, you managed to break the "
                            f"`{ctx.prefix}givexp` command!")
-    
+
     #clear command/error vv
     @commands.command()
     @commands.has_permissions(manage_messages=True)
@@ -95,10 +95,10 @@ class Commands(commands.Cog):
 
     @kick.error
     async def kick_error(ctx, error):
-    if isinstance(error, commands.MissingPermissions):
-        await ctx.send(f'{ctx.author.mention} you don\'t have the correct role to use this command! :cry:')
-    else:
-        await ctx.send(f'Unknown error occured: {error!r}')
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send(f'{ctx.author.mention} you don\'t have the correct role to use this command! :cry:')
+        else:
+            await ctx.send(f'Unknown error occured: {error!r}')
 
     #ban command/error vv
     @commands.command()
@@ -113,10 +113,10 @@ class Commands(commands.Cog):
 
     @ban.error
     async def ban_error(ctx, error):
-    if isinstance(error, commands.MissingPermissions):
-        await ctx.send(f'{ctx.author.mention} you don\'t have the correct role to use this command! :cry:')
-    else:
-        await ctx.send(f'Unknown error occured: {error!r}')
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send(f'{ctx.author.mention} you don\'t have the correct role to use this command! :cry:')
+        else:
+            await ctx.send(f'Unknown error occured: {error!r}')
 
     #unban command/error vv
 
@@ -132,5 +132,3 @@ class Commands(commands.Cog):
                 await ctx.guild.unban(user)
                 await ctx.send(f'Unbanned {user.mention}')
                 return
-
-
