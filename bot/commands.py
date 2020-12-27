@@ -12,13 +12,20 @@ class Commands(commands.Cog):
 	@commands.Cog.listener()
 	async def on_message(self, message):
 		if not message.author.bot:
-			user = await self.session.run_sync(UserXP.get_or_create, message.author.id)
+			user, commit = await self.session.run_sync(UserXP.get_or_create,
+													   message.author.id,
+											   		   message.guild.id,
+											   		   commit=True)
+			if commit: await self.session.commit()
 			user.xp += 1
-			await self.session.commit()
 
 	@commands.command()
 	async def xp(self, ctx, *message):
-		user = await self.session.run_sync(UserXP.get_or_create, ctx.author.id)
+		user, commit = await self.session.run_sync(UserXP.get_or_create,
+												   ctx.author.id,
+												   ctx.guild.id,
+												   commit=True)
+		if commit: await self.session.commit()
 		# Need the plus 1 because on_message runs after
 		# any command called
 		await ctx.send(f"{ctx.author.mention} You currently have {user.xp + 1:,} XP!")
@@ -39,7 +46,7 @@ class Commands(commands.Cog):
 	async def givexp(self, ctx, amount: int, receiver=commands.UserConverter()):
 		if not isinstance(receiver, discord.User):
 			receiver = ctx.author
-		user = await self.session.run_sync(UserXP.get_or_create, receiver.id)
+		user = await self.session.run_sync(UserXP.get_or_create, receiver.id, ctx.guild.id)
 		user.xp += amount
 		await self.session.commit()
 		await ctx.send(f"{ctx.author.mention} You have succesfully given {amount:,} XP "
