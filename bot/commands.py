@@ -77,6 +77,7 @@ class Commands(commands.Cog):
             await ctx.send(f"The `{ctx.prefix}givexp` command is unavailable in DMs. "
                             "Please try using it in a server.")
         else:
+            print(f"GiveXP command error: {error!r}")
             await ctx.send(f"{ctx.author.mention} Congrats, you managed to break the "
                            f"`{ctx.prefix}givexp` command!")
 
