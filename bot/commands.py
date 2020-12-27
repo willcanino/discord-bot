@@ -53,7 +53,7 @@ class Commands(commands.Cog):
     @commands.command(cls=ConvertIntCommand)
     @commands.has_guild_permissions(administrator=True)
     async def givexp(self, ctx, amount: int, receiver=commands.MemberConverter()):
-        if not isinstance(receiver, discord.User):
+        if not isinstance(receiver, discord.Member):
             receiver = ctx.author
         user = await self.session.run_sync(UserXP.get_or_create, receiver.id, ctx.guild.id)
         user.xp += amount
