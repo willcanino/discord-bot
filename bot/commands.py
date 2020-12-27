@@ -20,6 +20,7 @@ class Commands(commands.Cog):
             user.xp += 1
 
     @commands.command()
+    @commands.guild_only()
     async def xp(self, ctx, *message):
         user, commit = await self.session.run_sync(UserXP.get_or_create,
                                                    ctx.author.id,
