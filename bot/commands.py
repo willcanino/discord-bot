@@ -11,7 +11,7 @@ class Commands(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if not message.author.bot:
+        if not message.author.bot and message.guild:
             user, commit = await self.session.run_sync(UserXP.get_or_create,
                                                        message.author.id,
                                                        message.guild.id,
