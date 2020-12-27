@@ -14,3 +14,6 @@ class bot(commands.Bot):
     async def on_connect(self):
         async with self.engine.begin() as conn:
             await conn.run_sync(base.metadata.create_all)
+
+    async def on_ready(self):
+        print(f"{self.user} is ready!")
