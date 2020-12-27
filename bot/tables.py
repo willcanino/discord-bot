@@ -15,7 +15,7 @@ class UserXP(Base):
         user = session.get(cls, (discord_id, guild_id))
         need_to_commit = False
         if user is None:
-            user = cls(discord_id=discord_id, guild_id=guild_id)
+            user = cls(discord_id=discord_id, guild_id=guild_id, xp=0)
             session.add(user)
             need_to_commit = True
         return (user, need_to_commit) if commit else user
