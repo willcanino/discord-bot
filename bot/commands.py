@@ -158,15 +158,16 @@ class Commands(commands.Cog):
                                                    ctx.guild.id,
                                                    commit=True)
         if commit: await self.session.commit()
-        # NOTE: Since the on_message listener
-        # is run after commands are invoked
-        # we have to manually increase the xp
-        # since the xp does not account for the
-        # message that was sent to invoke this
-        # command
-        user.xp += 1
+
         if person == ctx.author:
+            # NOTE: Since the on_message listener
+            # is run after commands are invoked
+            # we have to manually increase the xp
+            # since the xp does not account for the
+            # message that was sent to invoke this
+            # command
+            user.xp += 1
             await ctx.send(f"{ctx.author.mention}, You are currently at level {user.level:,}!")
+            user.xp -= 1
         else:
             await ctx.send(f"{ctx.author.mention}, {person.mention} is currently at level {user.level:,}")
-        user.xp -= 1
