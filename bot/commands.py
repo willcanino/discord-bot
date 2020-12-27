@@ -14,8 +14,8 @@ class Commands(commands.Cog):
         if not message.author.bot:
             user, commit = await self.session.run_sync(UserXP.get_or_create,
                                                        message.author.id,
-                                                          message.guild.id,
-                                                          commit=True)
+                                                       message.guild.id,
+                                                       commit=True)
             if commit: await self.session.commit()
             user.xp += 1
 
