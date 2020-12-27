@@ -21,15 +21,20 @@ class Commands(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    async def xp(self, ctx, *message):
+    async def xp(self, ctx, person=commands.MemberConverter()):
+        if not isinstance(person, discord.Member):
+            person = ctx.author
         user, commit = await self.session.run_sync(UserXP.get_or_create,
-                                                   ctx.author.id,
+                                                   person.id,
                                                    ctx.guild.id,
                                                    commit=True)
         if commit: await self.session.commit()
         # Need the plus 1 because on_message runs after
         # any command called
-        await ctx.send(f"{ctx.author.mention} You currently have {user.xp + 1:,} XP!")
+        if person == ctx.author:
+            await ctx.send(f"{ctx.author.mention}, You currently have {user.xp + 1:,} XP!")
+        else:
+            await ctx.send(f"{ctx.author.mention}, {person.mention} currently has {user.xp + 1:,} XP!")
         # NOTE: User is added to database in on_message!
         # The user in this situation is not added
         # to the database until session.commit()
