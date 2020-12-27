@@ -8,7 +8,7 @@ class UserXP(Base):
 
 	discord_id = Column(BigInteger, primary_key=True)
 	guild_id = Column(BigInteger, primary_key=True)
-	xp = Column(Integer, nullable=False)
+	xp = Column(Integer, default=0, nullable=False)
 
 	@classmethod
 	def get_or_create(cls, session, discord_id):
