@@ -40,13 +40,40 @@ class Commands(commands.Cog):
         # is called. This occurs in the on_message
         # method; something to keep in mind.
 
+    @commands.command()
+    @commands.guild_only()
+    async def level(self, ctx, person=commands.MemberConverter()):
+        if not isinstance(person, discord.Member):
+            person = ctx.author
+        user, commit = await self.session.run_sync(UserXP.get_or_create,
+                                                   person.id,
+                                                   ctx.guild.id,
+                                                   commit=True)
+        if commit: await self.session.commit()
+
+        if person == ctx.author:
+            # NOTE: Since the on_message listener
+            # is run after commands are invoked
+            # we have to manually increase the xp
+            # since the xp does not account for the
+            # message that was sent to invoke this
+            # command
+            user.xp += 1
+            await ctx.send(f"{ctx.author.mention}, You are currently at level {user.level:,}!")
+            user.xp -= 1
+        else:
+            await ctx.send(f"{ctx.author.mention}, {person.mention} is currently at level {user.level:,}")
+
+    @level.error
     @xp.error
-    async def handle_xp_error(self, ctx, error):
+    async def handle_command_error(self, ctx, error):
         if isinstance(error, commands.NoPrivateMessage):
             await ctx.send('This command is not available in DMs. Try using it in a server with me')
+        elif isinstance(error, commands.MemberNotFound):
+            await ctx.send(f'{ctx.author.mention} `{ctx.message.content.split()[1]}` is not a valid member.')
         else:
-            print(f'XP Command error: {repr(error)}')
-            await ctx.send(f"Congrats, you managed to break the `{ctx.prefix}xp` command!")
+            print(f'{ctx.command} error: {lerror!r}')
+            await ctx.send(f"Congrats, you managed to break the `{ctx.prefix}{ctx.command}` command!")
 
     class ConvertIntCommand(commands.Command):
         async def do_conversion(self, ctx, converter, argument, param):
@@ -146,27 +173,3 @@ class Commands(commands.Cog):
                 await ctx.guild.unban(user)
                 await ctx.send(f'Unbanned {user.mention}')
                 return
-
-    @commands.command()
-    @commands.guild_only()
-    async def level(self, ctx, person=commands.MemberConverter()):
-        if not isinstance(person, discord.Member):
-            person = ctx.author
-        user, commit = await self.session.run_sync(UserXP.get_or_create,
-                                                   person.id,
-                                                   ctx.guild.id,
-                                                   commit=True)
-        if commit: await self.session.commit()
-
-        if person == ctx.author:
-            # NOTE: Since the on_message listener
-            # is run after commands are invoked
-            # we have to manually increase the xp
-            # since the xp does not account for the
-            # message that was sent to invoke this
-            # command
-            user.xp += 1
-            await ctx.send(f"{ctx.author.mention}, You are currently at level {user.level:,}!")
-            user.xp -= 1
-        else:
-            await ctx.send(f"{ctx.author.mention}, {person.mention} is currently at level {user.level:,}")
