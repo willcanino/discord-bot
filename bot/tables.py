@@ -11,11 +11,10 @@ class UserXP(Base):
 	xp = Column(Integer, default=0, nullable=False)
 
 	@classmethod
-	def get_or_create(cls, session, discord_id):
-		user = session.query(cls).filter(cls.discord_id == discord_id) \
-			   .one_or_none()
+	def get_or_create(cls, session, discord_id, guild_id):
+		user = session.get(cls, (discord_id, guild_id))
 		if user is None:
-			user = cls(discord_id=discord_id, xp=0)
+			user = cls(discord_id=discord_id, guild_id=guild_id)
 			session.add(user)
 		return user
 
