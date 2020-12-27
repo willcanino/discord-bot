@@ -142,3 +142,26 @@ class Commands(commands.Cog):
                 await ctx.guild.unban(user)
                 await ctx.send(f'Unbanned {user.mention}')
                 return
+
+    @commands.command()
+    @commands.guild_only()
+    async def level(self, ctx, person=commands.MemberConverter()):
+        if not isinstance(person, discord.Member):
+            person = ctx.author
+        user, commit = await self.session.run_sync(UserXP.get_or_create,
+                                                   person.id,
+                                                   ctx.guild.id,
+                                                   commit=True)
+        if commit: await self.session.commit()
+        # NOTE: Since the on_message listener
+        # is run after commands are invoked
+        # we have to manually increase the xp
+        # since the xp does not account for the
+        # message that was sent to invoke this
+        # command
+        user.xp += 1
+        if person == ctx.author:
+            await ctx.send(f"{ctx.author.mention}, You are currently at level {user.level:,}!")
+        else:
+            await ctx.send(f"{ctx.author.mention}, {person.mention} is currently at level {user.level:,}")
+        user.xp -= 1
