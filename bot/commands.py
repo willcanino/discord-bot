@@ -73,7 +73,7 @@ class Commands(commands.Cog):
         elif isinstance(error, commands.MemberNotFound):
             await ctx.send(f'{ctx.author.mention} `{ctx.message.content.split()[1]}` is not a valid member.')
         else:
-            print(f'{ctx.command} error: {lerror!r}')
+            print(f'{ctx.command} error: {error!r}')
             await ctx.send(f"Congrats, you managed to break the `{ctx.prefix}{ctx.command}` command!")
 
     class ConvertIntCommand(commands.Command):
@@ -116,27 +116,27 @@ class Commands(commands.Cog):
     #clear command/error vv
     @commands.command()
     @commands.has_permissions(manage_messages=True)
-    async def clear(ctx, amount=5):
+    async def clear(self, ctx, amount=5):
         await ctx.channel.purge(limit=amount)
 
     @clear.error
-    async def clear_error(ctx, error):
+    async def clear_error(self, ctx, error):
         if isinstance(error, commands.MissingPermissions):
             await ctx.send(f'{ctx.author.mention} you cannot use this command! :cry:')
 
     #kick command/error vv
     @commands.command()
     @commands.has_permissions(kick_members=True)
-    async def kick(ctx, member: commands.MemberConverter(), *, reason=None):
+    async def kick(self, ctx, member: commands.MemberConverter(), *, reason=None):
         embed = discord.Embed(title=f'You Have Been Kicked From {ctx.guild}',
                             description=f'Reason for Kick: {reason}', colour=discord.Colour.from_rgb(67, 181, 129))
-        embed.set_footer(icon_url=str(client.user.avatar_url),
+        embed.set_footer(icon_url=str(self.bot.user.avatar_url),
                         text=f'WillCaninoBot Alpha • {datetime.date.today()}')
         await member.send(embed=embed)
         await member.kick(reason=reason)
 
     @kick.error
-    async def kick_error(ctx, error):
+    async def kick_error(self, ctx, error):
         if isinstance(error, commands.MissingPermissions):
             await ctx.send(f'{ctx.author.mention} you don\'t have the correct role to use this command! :cry:')
         else:
@@ -145,25 +145,24 @@ class Commands(commands.Cog):
     #ban command/error vv
     @commands.command()
     @commands.has_permissions(ban_members=True)
-    async def ban(ctx, member: commands.MemberConverter(), *, reason=None):
+    async def ban(self, ctx, member: commands.MemberConverter(), *, reason=None):
         embed = discord.Embed(title=f'You Have Been Banned From {ctx.guild}',
                             description=f'Reason for Ban: {reason}', colour=discord.Colour.from_rgb(67, 181, 129))
-        embed.set_footer(icon_url=str(client.user.avatar_url),
+        embed.set_footer(icon_url=str(self.bot.user.avatar_url),
                         text=f'WillCaninoBot Alpha • {datetime.date.today()}')
         await member.send(embed=embed)
         await member.kick(reason=reason)
 
     @ban.error
-    async def ban_error(ctx, error):
+    async def ban_error(self, ctx, error):
         if isinstance(error, commands.MissingPermissions):
             await ctx.send(f'{ctx.author.mention} you don\'t have the correct role to use this command! :cry:')
         else:
             await ctx.send(f'Unknown error occured: {error!r}')
 
     #unban command/error vv
-
     @commands.command()
-    async def unban(ctx, *, member):
+    async def unban(self, ctx, *, member):
         banned_users = await ctx.quild.bans()
         member_name, member_discriminator = member.split('#')
 
