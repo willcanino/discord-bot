@@ -173,4 +173,18 @@ class Commands(commands.Cog):
                 await ctx.guild.unban(user)
                 await ctx.send(f'Unbanned {user.mention}')
                 return
- 
+
+
+    @commands.command()
+    async def whois(self, ctx, person=commands.MemberConverter()):
+        if not isinstance(person, discord.Member):
+            person = ctx.author
+        user = await self.session.run_sync(UserXP.get_or_create, person.id, ctx.guild.id)
+        await self.session.commit()
+        embed = discord.Embed(title=f'{person}\'s Info for {ctx.guild}',
+                                description=f'Level: {user.level:,} \n XP: {user.xp:,} ',
+                                colour=discord.Colour.from_rgb(67, 181, 129))
+        embed.set_thumbnail(url=person.avatar_url)
+        embed.set_footer(icon_url=str(self.bot.user.avatar_url),
+                            text=f'WillCaninoBot Alpha • {datetime.date.today()}')
+        await ctx.send(embed=embed)
