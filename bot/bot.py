@@ -16,7 +16,6 @@ class bot(commands.Bot):
             await conn.run_sync(base.metadata.create_all)
 
     async def on_ready(self):
-        await client.change_presence(status=discord.Status.online, activity=discord.Game('Hi, How Are You?'))
         print(f"{self.user} is ready!")
 
     
