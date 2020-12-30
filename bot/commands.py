@@ -162,6 +162,7 @@ class Commands(commands.Cog):
 
     #unban command/error vv
     @commands.command()
+    @commands.has_permissions(ban_members=True)
     async def unban(self, ctx, *, member):
         banned_users = await ctx.quild.bans()
         member_name, member_discriminator = member.split('#')
@@ -173,7 +174,6 @@ class Commands(commands.Cog):
                 await ctx.guild.unban(user)
                 await ctx.send(f'Unbanned {user.mention}')
                 return
-
 
     @commands.command()
     async def whois(self, ctx, person=commands.MemberConverter()):
@@ -188,3 +188,8 @@ class Commands(commands.Cog):
         embed.set_footer(icon_url=str(self.bot.user.avatar_url),
                             text=f'WillCaninoBot Alpha • {datetime.date.today()}')
         await ctx.send(embed=embed)
+
+    @commands.command()
+    @commands.has_permissions(mute_members=True)
+    async def mute(self, ctx, member: commands.MemberConverter(), time):
+        
